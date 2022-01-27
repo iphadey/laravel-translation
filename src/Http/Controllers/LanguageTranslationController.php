@@ -60,8 +60,7 @@ class LanguageTranslationController extends Controller
             $this->translation->addSingleTranslation($language, 'single', $request->get('key'), $request->get('value') ?: '');
         }
 
-        return redirect()
-            ->route('languages.translations.index', $language)
+        return back()
             ->with('success', __('translation::translation.translation_added'));
     }
 
