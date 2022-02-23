@@ -38,9 +38,22 @@ abstract class Translation
                 foreach ($groups as $group => $translations) {
                     foreach ($translations as $key => $value) {
                         if (Str::contains($group, 'single')) {
-                            $this->addSingleTranslation($language, $group, $key);
+                            if (str_contains($key, 'message.') || str_contains($key, 'locale.') || str_contains($key, 'contact-us.') || str_contains($key, 'pagination.') || str_contains($key, 'auth.') || str_contains($key, 'button.') || str_contains($key, 'validation.') || str_contains($key, 'passwords.') || str_contains($key, "' . ") || str_contains($key, "permission.")) {
+                                continue;
+                            }
+
+                            if (str_contains($key, "\r\n")) {
+                                $key = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $key)));
+                                $key = trim($key, "\t\n\r\0\x0B");
+                            }
+
+                            if (str_contains($key, "\\")) {
+                                $key = str_replace("\\", "", $key);
+                            }
+
+                            $this->addSingleTranslation($language, $group, $key, ($value ? $value : str_replace("_", " ", Str::ucfirst($key))));
                         } else {
-                            $this->addGroupTranslation($language, $group, $key);
+//                            $this->addGroupTranslation($language, $group, $key);
                         }
                     }
                 }
